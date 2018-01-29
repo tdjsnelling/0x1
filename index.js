@@ -5,9 +5,12 @@ var multer  = require('multer');
 var mime = require('mime-types');
 var crypto = require('crypto');
 var fs = require('fs');
+var swig = require('swig');
+var consolidate = require('consolidate');
 
 var port = 8000;
 
+var rootUrl = 'https://0x1.host/';
 var maxFileSize = 2.56e8;
 var doNotAllow = ['applicaton/x-dosexec', 'application/x-msdos-program'];
 
@@ -36,14 +39,17 @@ function fileFilter(req, file, cb) {
 var upload = multer({ limits: { fileSize: maxFileSize }, storage: storage, fileFilter: fileFilter });
 
 app.use(express.urlencoded());
+app.set('views', __dirname + '/public');
+app.set('view engine', 'ejs');
+app.engine('html', consolidate.swig);
 
 app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, '/public', 'index.txt'));
+	res.render('index.html', { url: rootUrl, maxFileSize: maxFileSize, doNotAllow: doNotAllow });
 });
 
 app.post('/', upload.single('file'), (req, res) => {
 	if (req.file) {
-		res.send(req.file.filename + '\n');
+		res.send(rootUrl + req.file.filename + '\n');
 	}
 	else {
 		res.sendStatus(400);

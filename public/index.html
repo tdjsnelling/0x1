@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>0x1.host</title>
+	<style>
+		body {
+			font-family: monospace;
+		}
+		pre {
+			margin: 16px;
+		}
+	</style>
+</head>
+<body>
+<pre>
+0x1.host
+========
+
+a nodejs clone of https://0x0.st
+
+upload:
+	curl -F file=@yourfile.txt {{ url }}
+
+max file size:
+	{{ maxFileSize }} B
+
+not allowed:
+	{% for i in doNotAllow %}
+	{{ i }}
+	{% endfor %}
+</pre>
+</body>
+</html>
