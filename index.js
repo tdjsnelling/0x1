@@ -11,8 +11,8 @@ var consolidate = require('consolidate');
 var port = 8000;
 
 var rootUrl = 'https://0x1.host/';
-var maxFileSize = 2.56e8;
-var doNotAllow = ['applicaton/x-dosexec', 'application/x-msdos-program'];
+var maxFileSize = 256 * 1024 * 1024;
+var doNotAllow = ['application/x-dosexec', 'application/x-msdos-program'];
 
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -44,7 +44,7 @@ app.set('view engine', 'ejs');
 app.engine('html', consolidate.swig);
 
 app.get('/', (req, res) => {
-	res.render('index.html', { url: rootUrl, maxFileSize: maxFileSize, doNotAllow: doNotAllow });
+	res.render('index.html', { url: rootUrl, maxFileSize: maxFileSize / (1024 * 1024), doNotAllow: doNotAllow });
 });
 
 app.post('/', upload.single('file'), (req, res) => {

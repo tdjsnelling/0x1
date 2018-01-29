@@ -19,15 +19,25 @@
 a nodejs clone of https://0x0.st
 
 upload:
+
 	curl -F file=@yourfile.txt {{ url }}
 
 max file size:
-	{{ maxFileSize }} B
+
+	{{ maxFileSize }} MiB
 
 not allowed:
 	{% for i in doNotAllow %}
 	{{ i }}
 	{% endfor %}
+
+clone and run your own instance:
+
+	https://github.com/tdjsnelling/0x1
+
+contact:
+
+	tdjs (at) 0x1.host
 </pre>
 </body>
 </html>
