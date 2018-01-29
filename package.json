@@ -1,0 +1,11 @@
+{
+  "name": "0x1",
+  "version": "1.0.0",
+  "description": "a nodejs clone of https://0x0.st",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tom Snelling @tdjsnelling",
+  "license": "MIT"
+}
