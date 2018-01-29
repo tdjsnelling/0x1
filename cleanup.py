@@ -13,7 +13,7 @@ os.chdir(os.path.dirname(sys.argv[1]))
 files = [f for f in os.listdir(".")]
 
 jsonData = json.load(open('config.json'))
-maxage = jsonData['filePersistance']
+maxage = jsonData['filePersistence']
 
 for f in files:
     stat = os.stat(f)

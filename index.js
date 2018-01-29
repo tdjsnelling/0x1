@@ -15,7 +15,7 @@ var port = config.port;
 var rootUrl = config.rootUrl;
 var maxFileSize = config.maxFileSize;
 var doNotAllow = config.doNotAllow;
-var filePersistance = config.filePersistance;
+var filePersistence = config.filePersistence;
 var abuseEmail = config.abuseEmail;
 
 var storage = multer.diskStorage({
@@ -48,7 +48,7 @@ app.set('view engine', 'ejs');
 app.engine('html', consolidate.swig);
 
 app.get('/', (req, res) => {
-	res.render('index.html', { url: rootUrl, maxFileSize: maxFileSize / (1024 * 1024), doNotAllow: doNotAllow, filePersistance: filePersistance, abuseEmail: abuseEmail });
+	res.render('index.html', { url: rootUrl, maxFileSize: maxFileSize / (1024 * 1024), doNotAllow: doNotAllow, filePersistence: filePersistence, abuseEmail: abuseEmail });
 });
 
 app.post('/', upload.single('file'), (req, res) => {
