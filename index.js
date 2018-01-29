@@ -8,11 +8,14 @@ var fs = require('fs');
 var swig = require('swig');
 var consolidate = require('consolidate');
 
-var port = 8000;
+var config = require('./config');
 
-var rootUrl = 'https://0x1.host/';
-var maxFileSize = 256 * 1024 * 1024;
-var doNotAllow = ['application/x-dosexec', 'application/x-msdos-program'];
+var port = config.port;
+
+var rootUrl = config.rootUrl;
+var maxFileSize = config.maxFileSize;
+var doNotAllow = config.doNotAllow;
+var abuseEmail = config.abuseEmail;
 
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -44,7 +47,7 @@ app.set('view engine', 'ejs');
 app.engine('html', consolidate.swig);
 
 app.get('/', (req, res) => {
-	res.render('index.html', { url: rootUrl, maxFileSize: maxFileSize / (1024 * 1024), doNotAllow: doNotAllow });
+	res.render('index.html', { url: rootUrl, maxFileSize: maxFileSize / (1024 * 1024), doNotAllow: doNotAllow, abuseEmail: abuseEmail });
 });
 
 app.post('/', upload.single('file'), (req, res) => {

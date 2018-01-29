@@ -1,0 +1,10 @@
+{
+	"port": 8000,
+	"rootUrl": "https://0x1.host/",
+	"maxFileSize": 268435456,
+	"doNotAllow": [
+		"application/x-dosexec", 
+		"application/x-msdos-program"
+	],
+	"abuseEmail": "tdjs (at) 0x1.host"
+}
