@@ -13,23 +13,22 @@
 </head>
 <body>
 <pre>
-0x1.host
-========
+<b>0x1.host</b>
 
-upload: curl -F file=@yourfile.txt {{ url }}
 
-max file size: {{ maxFileSize }} MiB
+<u>upload</u>: curl -F file=@yourfile.txt {{ url }}
 
-not allowed:
+<u>max file size</u>: {{ maxFileSize }} MiB
+
+<u>not allowed</u>:
 	{% for i in doNotAllow %}
-	{{ i }}
-	{% endfor %}
+	{{ i }}{% endfor %}
 
-file persistence: {{ filePersistence }} days
+<u>file persistence</u>: {{ filePersistence }} days
 
-clone and run your own instance: https://github.com/tdjsnelling/0x1
+<u>clone and run your own instance</u>: https://github.com/tdjsnelling/0x1
 
-contact: {{ abuseEmail }}
+<u>contact</u>: {{ abuseEmail }}
 </pre>
 </body>
 </html>
