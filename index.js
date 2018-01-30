@@ -11,8 +11,8 @@ var consolidate = require('consolidate');
 var config = require('./config');
 
 var port = config.port;
-
 var rootUrl = config.rootUrl;
+var uploadPath = config.uploadPath;
 var maxFileSize = config.maxFileSize;
 var doNotAllow = config.doNotAllow;
 var filePersistence = config.filePersistence;
@@ -20,7 +20,7 @@ var abuseEmail = config.abuseEmail;
 
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, 'uploads')
+		cb(null, uploadPath)
 	},
 	filename: function (req, file, cb) {
 		var mimeType = mime.lookup(file.originalname);
@@ -36,13 +36,13 @@ function fileFilter(req, file, cb) {
 		cb(null, false);
 	}
 	else {
-  		cb(null, true);
-  	}
+		cb(null, true);
+	}
 }
 
 var upload = multer({ limits: { fileSize: maxFileSize }, storage: storage, fileFilter: fileFilter });
 
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.set('views', __dirname + '/public');
 app.set('view engine', 'ejs');
 app.engine('html', consolidate.swig);
@@ -61,9 +61,9 @@ app.post('/', upload.single('file'), (req, res) => {
 });
 
 app.get('/:fileId', (req, res) => {
-	var fileToSend = path.join(__dirname, '/uploads', req.params.fileId);
+	var fileToSend = path.join(__dirname, uploadPath, req.params.fileId);
 	if (fs.existsSync(fileToSend)) {
-    	res.sendFile(fileToSend);
+		res.sendFile(fileToSend);
 	}
 	else {
 		res.sendStatus(404);

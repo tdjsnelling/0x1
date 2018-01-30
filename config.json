@@ -1,6 +1,7 @@
 {
 	"port": 8000,
 	"rootUrl": "https://0x1.host/",
+	"uploadPath": "uploads",
 	"maxFileSize": 268435456,
 	"doNotAllow": [
 		"application/x-dosexec", 
