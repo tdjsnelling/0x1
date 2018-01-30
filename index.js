@@ -41,6 +41,7 @@ function fileFilter(req, file, cb) {
 }
 
 var upload = multer({ limits: { fileSize: maxFileSize }, storage: storage, fileFilter: fileFilter });
+var uploadFunc = upload.single('file');
 
 app.use(express.urlencoded({ extended: true }));
 app.set('views', __dirname + '/public');
@@ -51,13 +52,25 @@ app.get('/', (req, res) => {
 	res.render('index.html', { url: rootUrl, maxFileSize: maxFileSize / (1024 * 1024), doNotAllow: doNotAllow, filePersistence: filePersistence, abuseEmail: abuseEmail });
 });
 
-app.post('/', upload.single('file'), (req, res) => {
-	if (req.file) {
-		res.send(rootUrl + req.file.filename + '\n');
-	}
-	else {
-		res.sendStatus(400);
-	}
+app.post('/', (req, res) => {
+	uploadFunc(req, res, (err) => {
+		if (err) {
+			if (err.code == 'LIMIT_FILE_SIZE') {
+				res.sendStatus(413);
+			}
+			else {
+				res.sendStatus(400);
+			}
+			return;
+		}
+
+		if (req.file) {
+			res.send(rootUrl + req.file.filename + '\n');
+		}
+		else {
+			res.sendStatus(400);
+		}
+	});
 });
 
 app.get('/:fileId', (req, res) => {
