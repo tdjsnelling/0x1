@@ -7,6 +7,7 @@ var crypto = require('crypto');
 var fs = require('fs');
 var swig = require('swig');
 var consolidate = require('consolidate');
+var mongoose = require('mongoose');
 
 var config = require('./config');
 
@@ -17,6 +18,15 @@ var maxFileSize = config.maxFileSize;
 var doNotAllow = config.doNotAllow;
 var filePersistence = config.filePersistence;
 var abuseEmail = config.abuseEmail;
+
+mongoose.connect('mongodb://localhost/uploads', { promiseLibrary: global.Promise });
+
+var uploadRecord = mongoose.model('upload', {
+	ip: String,
+	originalFilename: String,
+	filename: String,
+	timestamp: Number
+});
 
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -65,7 +75,27 @@ app.post('/', (req, res) => {
 		}
 
 		if (req.file) {
-			res.send(rootUrl + req.file.filename + '\n');
+			var ip = req.ip;
+			if (ip.substr(0, 7) == '::ffff:') {
+				ip = ip.substr(7)
+			}
+
+			var newUploadRecord = new uploadRecord({
+				ip: ip,
+				originalFilename: req.file.originalname,
+				filename: req.file.filename,
+				timestamp: + new Date()
+			});
+
+			newUploadRecord.save((err) => {
+				if (err) {
+					console.error(err);
+					res.sendStatus(500);
+				}
+				else {
+					res.send(rootUrl + req.file.filename + '\n');
+				}
+			});
 		}
 		else {
 			res.sendStatus(400);
