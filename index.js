@@ -7,6 +7,7 @@ var crypto = require('crypto');
 var fs = require('fs');
 var swig = require('swig');
 var consolidate = require('consolidate');
+var useragent = require('express-useragent');
 var mongoose = require('mongoose');
 
 var config = require('./config');
@@ -54,12 +55,20 @@ var upload = multer({ limits: { fileSize: maxFileSize }, storage: storage, fileF
 var uploadFunc = upload.single('file');
 
 app.use(express.urlencoded({ extended: true }));
+app.use(useragent.express());
 app.set('views', __dirname + '/public');
 app.set('view engine', 'ejs');
 app.engine('html', consolidate.swig);
 
+var curlGet = '0x1.host\n\nupload: curl -F file=@yourfile.txt ' + rootUrl + '\nmax file size: ' + maxFileSize / (1024 * 1024) + ' MiB\nnot allowed: ' + doNotAllow + '\nfile persistence: ' + filePersistence + ' days \n'; 
+
 app.get('/', (req, res) => {
-	res.render('index.html', { url: rootUrl, maxFileSize: maxFileSize / (1024 * 1024), doNotAllow: doNotAllow, filePersistence: filePersistence, abuseEmail: abuseEmail });
+	if (req.useragent.isCurl) {
+		res.send(curlGet);
+	}
+	else {
+		res.render('index.html', { url: rootUrl, maxFileSize: maxFileSize / (1024 * 1024), doNotAllow: doNotAllow, filePersistence: filePersistence, abuseEmail: abuseEmail });
+	}
 });
 
 app.post('/', (req, res) => {
