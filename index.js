@@ -10,6 +10,7 @@ var consolidate = require('consolidate');
 var useragent = require('express-useragent');
 var mongoose = require('mongoose');
 
+var customstorage = require('./customstorage');
 var config = require('./config');
 
 var port = config.port;
@@ -26,10 +27,11 @@ var uploadRecord = mongoose.model('upload', {
 	ip: String,
 	originalFilename: String,
 	filename: String,
+	hash: String,
 	timestamp: Number
 });
 
-var storage = multer.diskStorage({
+var storage = customstorage({
 	destination: function (req, file, cb) {
 		cb(null, uploadPath)
 	},
@@ -93,6 +95,7 @@ app.post('/', (req, res) => {
 				ip: ip,
 				originalFilename: req.file.originalname,
 				filename: req.file.filename,
+				hash: req.file.hash,
 				timestamp: + new Date()
 			});
 
